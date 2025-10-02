@@ -1,0 +1,24 @@
+- name: Create mount directory for NFS
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ nfs_mounts | default([]) }}"
+
+- name: Mount NFS share
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts | default('rw') }}"
+    state: mounted
+  loop: "{{ nfs_mounts | default([]) }}"
+
+- name: Persist NFS mount in fstab
+  ansible.posix.mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts | default('rw') }}"
+    state: present
+  loop: "{{ nfs_mounts | default([]) }}"

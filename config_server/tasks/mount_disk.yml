@@ -1,0 +1,62 @@
+---
+# --- Disk Mounting ---
+- name: Ensure parted is installed
+  ansible.builtin.package:
+    name: parted
+    state: present
+
+- name: Partition disks
+  community.general.parted:
+    device: "{{ item.device }}"
+    number: 1
+    state: present
+    part_type: primary
+  loop: "{{ disks }}"
+  loop_control:
+    label: "{{ item.device }}"
+
+- name: Create filesystem
+  ansible.builtin.filesystem:
+    fstype: "{{ item.fstype }}"
+    dev: "{{ item.partition }}"
+  loop: "{{ disks }}"
+  loop_control:
+    label: "{{ item.partition }}"
+
+- name: Create mount directory
+  ansible.builtin.file:
+    path: "{{ item.mountpoint }}"
+    state: directory
+    mode: '0755'
+  loop: "{{ disks }}"
+  loop_control:
+    label: "{{ item.mountpoint }}"
+
+- name: Mount disk
+  ansible.posix.mount:
+    path: "{{ item.mountpoint }}"
+    src: "{{ item.partition }}"
+    fstype: "{{ item.fstype }}"
+    state: mounted
+  loop: "{{ disks }}"
+  loop_control:
+    label: "{{ item.partition }} -> {{ item.mountpoint }}"
+
+- name: Persist mount in fstab
+  ansible.posix.mount:
+    path: "{{ item.mountpoint }}"
+    src: "{{ item.partition }}"
+    fstype: "{{ item.fstype }}"
+    opts: defaults
+    state: present
+  loop: "{{ disks }}"
+  loop_control:
+    label: "{{ item.partition }}"
+
+# --- NFS Mounts ---
+- name: Ensure nfs client package installed
+  ansible.builtin.package:
+    name: nfs-common
+    state: present
+  when: enable_nfs | default(false)
+

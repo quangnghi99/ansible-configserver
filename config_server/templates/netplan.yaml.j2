@@ -1,0 +1,24 @@
+network:
+  version: 2
+  ethernets:
+{% for iface, cfg in interfaces.items() %}
+    {{ iface }}:
+      addresses:
+        - {{ cfg.address }}
+{% if cfg.gateway is defined and cfg.gateway|length > 0 %}
+      routes:
+        - to: default
+          via: {{ cfg.gateway }}
+{% endif %}
+{% if cfg.routes is defined and cfg.routes|length > 0 %}
+      routes:
+{% for r in cfg.routes %}
+        - to: {{ r.to }}
+          via: {{ r.via }}
+{% endfor %}
+{% endif %}
+{% if cfg.dns_servers is defined and cfg.dns_servers|length > 0 %}
+      nameservers:
+        addresses: {{ cfg.dns_servers }}
+{% endif %}
+{% endfor %}

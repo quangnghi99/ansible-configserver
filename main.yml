@@ -1,0 +1,6 @@
+---
+- name: Config server
+  hosts: all
+  become: true
+  roles:
+    - config_server

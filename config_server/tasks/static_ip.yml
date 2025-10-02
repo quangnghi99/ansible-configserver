@@ -1,0 +1,19 @@
+---
+# tasks file for netplan_static
+- name: Backup netplan file
+  ansible.builtin.command: cp /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
+  ignore_errors: true
+
+- name: Create file netplan from host_vars
+  ansible.builtin.template:
+    src: netplan.yaml.j2
+    dest: /etc/netplan/50-cloud-init.yaml
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Apply netplan without blocking
+  ansible.builtin.command: netplan apply
+  async: 30
+  poll: 0
+  ignore_errors: true

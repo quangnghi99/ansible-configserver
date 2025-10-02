@@ -1,0 +1,9 @@
+---
+- name: Generate config.env per host
+  ansible.builtin.template:
+    src: install_teleport.sh.j2
+    dest: install_teleport.sh
+    mode: '0644'
+
+- name: Run install script
+  ansible.builtin.shell: install_teleport.sh

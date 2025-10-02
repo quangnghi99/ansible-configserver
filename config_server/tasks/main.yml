@@ -1,0 +1,21 @@
+---
+# tasks file for netplan_static
+- name: Update and upgrade apt packages
+  ansible.builtin.include_tasks: pre-setup.yml
+  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Static IP configuration
+  ansible.builtin.include_tasks: static_ip.yml
+  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Mount disk configuration
+  ansible.builtin.include_tasks: mount_disk.yml
+  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
+
+- name: Mount NFS configuration
+  ansible.builtin.include_tasks: mount_nfs.yml
+  when: (ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu') and (enable_nfs | default(false))
+
+- name: Install Teleport Agent
+  ansible.builtin.include_tasks: install_teleport.yml
+  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
