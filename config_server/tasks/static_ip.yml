@@ -16,4 +16,4 @@
   ansible.builtin.command: netplan apply
   async: 30
   poll: 0
-  ignore_errors: true
+  ignore_errors: false

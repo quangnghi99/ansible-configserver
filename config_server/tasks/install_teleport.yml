@@ -3,7 +3,9 @@
   ansible.builtin.template:
     src: install_teleport.sh.j2
     dest: install_teleport.sh
-    mode: '0644'
+    mode: '0755'
 
 - name: Run install script
-  ansible.builtin.shell: install_teleport.sh
+  ansible.builtin.shell: ./install_teleport.sh
+  register: install_teleport_result
+  changed_when: "'already installed' not in install_teleport_result.stdout"

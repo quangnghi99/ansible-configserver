@@ -5,3 +5,9 @@
     upgrade: yes
     update_cache: yes
     cache_valid_time: 3600  # 1 hour
+
+- name: Change root password
+  ansible.builtin.user:
+    name: root
+    password: "{{ new_root_passwd | password_hash('sha512') }}"
+    update_password: always

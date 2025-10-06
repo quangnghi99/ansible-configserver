@@ -1,14 +1,10 @@
+new_root_passwd: Viettel#2023
 # Static IP
 interfaces:
   eth0:
-    address: "192.168.10.250/24"
-    gateway: "192.168.10.1"
+    address: "192.168.0.50/24"
+    gateway: "192.168.0.1"
     dns_servers: ["8.8.8.8", "1.1.1.1"]
-  eth1:
-    address: "192.168.20.100/24"
-    routes:
-      - to: "192.168.10.250/24"
-        via: "192.168.20.1"
         
 # Mount disks
 disks:
@@ -16,22 +12,18 @@ disks:
     partition: "/dev/vdb1"
     mountpoint: "/data1"
     fstype: "ext4"
-  - device: "/dev/vdc"
-    partition: "/dev/vdc1"
-    mountpoint: "/data2"
-    fstype: "ext4"
 # NFS Mounts
-
-enable_nfs: false
+enable_nfs: yes
 nfs_mounts:
-  - src: "192.168.10.193:/shares/share-c2eda171-30c7-455d-8bd6-c8fe9cb85ebc"
+  - src: "192.168.0.57:/shares/share-30f4ed15-f350-4d0b-9fb9-95f4faf51ac0"
     path: "/mnt/nfs-share"
     fstype: "nfs4"
     opts: "vers=4,minorversion=0,rw,rsize=1048576,wsize=1048576"
 
 # Teleport configuration
+enable_teleport: yes
 teleport:
-  system: "ĐHTN_MTTQ"
-  ip: "10.129.12.128"
-  ip_local: "10.0.168.12"
-  hostname: "Cluster-1-Worker1"
+  system: "Test"
+  ip: "192.168.0.50"
+  ip_local: "192.168.0.50"
+  hostname: "Test"
