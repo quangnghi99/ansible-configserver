@@ -4,9 +4,10 @@
     name: root
     password: "{{ new_root_passwd | password_hash('sha512') }}"
     update_password: always
+
 - name: Update and upgrade apt packages
   ansible.builtin.apt:
-    upgrade: true
+    upgrade: false
     update_cache: true
     cache_valid_time: 3600  # 1 hour
 

@@ -25,7 +25,9 @@
 
 # Copy /var to /var_backup if mountpoint is /var
 - name: Backup /var to /var_backup before mounting
-  ansible.builtin.command: cp -a /var/* /var_backup
+  ansible.builtin.shell: |
+    mkdir -p /var_backup
+    cp -a /var/* /var_backup/ || true
   when: "'/var' in disks | map(attribute='mountpoint') | list"
 
 # Create mount directory (skip if /var)
@@ -63,6 +65,7 @@
     label: "{{ item.partition }}"
 
 - name: Restore /var from /var_backup after mounting
-  ansible.builtin.command: cp -a /var_backup/ /var/
+  ansible.builtin.shell: |
+    cp -a /var_backup/* /var/ || true
   when: "'/var' in disks | map(attribute='mountpoint') | list"
 
