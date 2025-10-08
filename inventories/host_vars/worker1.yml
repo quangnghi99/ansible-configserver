@@ -1,5 +1,6 @@
 new_root_passwd: Viettel#2023
 # Static IP
+enable_static_ip: yes
 interfaces:
   eth0:
     address: "192.168.0.50/24"

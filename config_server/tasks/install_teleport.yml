@@ -8,4 +8,14 @@
 - name: Run install script
   ansible.builtin.shell: ./install_teleport.sh
   register: install_teleport_result
-  changed_when: "'already installed' not in install_teleport_result.stdout"
+
+- name: Display install result
+  ansible.builtin.debug:
+    var: install_teleport_result.stdout
+  when: install_teleport_result is defined
+
+- name: Restart teleport service
+  ansible.builtin.command: |
+    rm -rf /var/lib/teleport
+    systemctl daemon-reload
+    systemctl restart teleport

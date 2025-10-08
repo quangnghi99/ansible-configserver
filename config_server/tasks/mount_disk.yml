@@ -23,15 +23,23 @@
   loop_control:
     label: "{{ item.partition }}"
 
+# Copy /var to /var_backup if mountpoint is /var
+- name: Backup /var to /var_backup before mounting
+  ansible.builtin.command: cp -a /var/* /var_backup
+  when: "'/var' in disks | map(attribute='mountpoint') | list"
+
+# Create mount directory (skip if /var)
 - name: Create mount directory
   ansible.builtin.file:
     path: "{{ item.mountpoint }}"
     state: directory
     mode: '0755'
   loop: "{{ disks }}"
+  when: item.mountpoint != '/var'
   loop_control:
     label: "{{ item.mountpoint }}"
 
+# Mount disk (skip if /var)
 - name: Mount disk
   ansible.posix.mount:
     path: "{{ item.mountpoint }}"
@@ -42,6 +50,7 @@
   loop_control:
     label: "{{ item.partition }} -> {{ item.mountpoint }}"
 
+# Persist mount in fstab (skip if /var)
 - name: Persist mount in fstab
   ansible.posix.mount:
     path: "{{ item.mountpoint }}"
@@ -53,10 +62,7 @@
   loop_control:
     label: "{{ item.partition }}"
 
-# --- NFS Mounts ---
-- name: Ensure nfs client package installed
-  ansible.builtin.package:
-    name: nfs-common
-    state: present
-  when: enable_nfs | default(false)
+- name: Restore /var from /var_backup after mounting
+  ansible.builtin.command: cp -a /var_backup/ /var/
+  when: "'/var' in disks | map(attribute='mountpoint') | list"
 

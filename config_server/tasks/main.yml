@@ -2,11 +2,7 @@
 # tasks file for config_server
 - name: Static IP configuration
   ansible.builtin.include_tasks: static_ip.yml
-  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
-
-- name: Update and upgrade apt packages
-  ansible.builtin.include_tasks: pre-setup.yml
-  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
+  when: (ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu') and (enable_static_ip | default(false))
 
 - name: Mount disk configuration
   ansible.builtin.include_tasks: mount_disk.yml
@@ -18,3 +14,7 @@
 - name: Install Teleport Agent
   ansible.builtin.include_tasks: install_teleport.yml
   when: (ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu') and (enable_teleport | default(false))
+
+- name: Update and upgrade apt packages
+  ansible.builtin.include_tasks: pre-setup.yml
+  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'

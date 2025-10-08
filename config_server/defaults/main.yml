@@ -1,3 +1,8 @@
 ---
 # defaults file for netplan_static
 interfaces: {}
+disks: []
+enable_nfs: no
+nfs_mounts: []
+enable_teleport: no
+teleport: {}

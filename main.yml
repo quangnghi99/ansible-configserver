@@ -1,6 +1,7 @@
 ---
 - name: Config server
   hosts: all
+  serial: 5
   become: true
   roles:
     - config_server
