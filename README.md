@@ -11,6 +11,7 @@
 - [🧐 About ](#-about-)
   - [Prerequisites](#prerequisites)
   - [Role Variables](#role-variables)
+- [Run Script](#run-script)
 
 ## 🧐 About <a name = "about"></a>
 
@@ -81,5 +82,14 @@ teleport:
   ip: "192.168.0.50"
   ip_local: "192.168.0.50"
   hostname: "App1"
+```
+## Run Script
+Check interface name:
+```bash
+ansible-playbook -i inventories/inventory.ini check_network.yml
+```
+Run script:
+```bash
+ansible-playbook -i inventories/inventory.ini main.yml
 ```
 
