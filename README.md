@@ -4,99 +4,82 @@
 
 ---
 
-<p align="center"> Few lines describing your project.
-    <br> 
-</p>
 
 ## 📝 Table of Contents
 
-- [About](#about)
-- [Getting Started](#getting_started)
-- [Deployment](#deployment)
-- [Usage](#usage)
-- [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
-- [Authors](#authors)
-- [Acknowledgments](#acknowledgement)
+- [📝 Table of Contents](#-table-of-contents)
+- [🧐 About ](#-about-)
+  - [Prerequisites](#prerequisites)
+  - [Role Variables](#role-variables)
 
 ## 🧐 About <a name = "about"></a>
 
-Write about 1-2 paragraphs describing the purpose of your project.
-
-## 🏁 Getting Started <a name = "getting_started"></a>
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+This project is used to set up the basic configurations of servers, such as assigning static IPs, mounting disks and NFS, performing system updates, changing passwords, and installing Teleport.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them.
+Controller node need install Ansible with requirement
+
+- Ansible
+- Python3, pip and dependent package
 
 ```
-Give examples
+pip install -r requirements.txt
+```
+Note that this role requires root access
+
+### Role Variables
+Available variables are listed below:
+- Static IP:
+Example
+```yaml
+enable_static_ip: yes
+interfaces:
+  eth0:
+    address: "192.168.0.50/24"
+    gateway: "192.168.0.1"
+    dns_servers: ["8.8.8.8", "1.1.1.1"]
+  eth1:
+    address: "10.129.10.100/21"
+    routes:
+      - to: "10.129.8.0/24"
+        via: "10.129.10.1"
+```
+Set `enable_static_ip: yes` if you want set static for your IP. `eth0` and `eth1` are your interface name. Set address
+Set `gateway` will create default route for your interface, if dont set gateway, you can set `routes` when specific routing is needed on the interface.
+Set `dns_servers` if you need resolve DNS.
+- Mount Disk:
+Example
+```yaml  
+disks:
+  - device: "/dev/vdb"
+    partition: "/dev/vdb1"
+    mountpoint: "/data1"
+    fstype: "ext4"
+  - device: "/dev/vdc"
+    partition: "/dev/vdc1"
+    mountpoint: "/data2"
+    fstype: "ext4"
+```
+Each `devide` corresponds to a disk attached to the server. Set `partition`, `mountpoint` and `fstype`. You can add multi device like `vdc`, `vdd`.
+- Mount NFS:
+Example
+```yaml
+enable_nfs: yes
+nfs_mounts:
+  - src: "192.168.0.57:/shares/"
+    path: "/mnt/nfs-share"
+    fstype: "nfs4"
+    opts: "vers=4,minorversion=0,rw,rsize=1048576,wsize=1048576"
+```
+- Install Teleport
+Example
+```yaml
+enable_teleport: yes
+teleport:
+  system: "System"
+  ip: "192.168.0.50"
+  ip_local: "192.168.0.50"
+  hostname: "App1"
 ```
 
-### Installing
-
-A step by step series of examples that tell you how to get a development env running.
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo.
-
-## 🔧 Running the tests <a name = "tests"></a>
-
-Explain how to run the automated tests for this system.
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## 🎈 Usage <a name="usage"></a>
-
-Add notes about how to use the system.
-
-## 🚀 Deployment <a name = "deployment"></a>
-
-Add additional notes about how to deploy this on a live system.
-
-## ⛏️ Built Using <a name = "built_using"></a>
-
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
-
-## ✍️ Authors <a name = "authors"></a>
-
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
-
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
-
-## 🎉 Acknowledgements <a name = "acknowledgement"></a>
-
-- Hat tip to anyone whose code was used
-- Inspiration
-- References

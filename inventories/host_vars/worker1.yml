@@ -1,9 +1,8 @@
-new_root_passwd: Viettel#2023
 # Static IP
 enable_static_ip: yes
 interfaces:
   eth0:
-    address: "192.168.0.50/24"
+    address: "192.168.0.x/24"
     gateway: "192.168.0.1"
     dns_servers: ["8.8.8.8", "1.1.1.1"]
         
@@ -16,7 +15,7 @@ disks:
 # NFS Mounts
 enable_nfs: yes
 nfs_mounts:
-  - src: "192.168.0.57:/shares/share-30f4ed15-f350-4d0b-9fb9-95f4faf51ac0"
+  - src: "192.168.0.x:/shares/"
     path: "/mnt/nfs-share"
     fstype: "nfs4"
     opts: "vers=4,minorversion=0,rw,rsize=1048576,wsize=1048576"
@@ -25,6 +24,9 @@ nfs_mounts:
 enable_teleport: yes
 teleport:
   system: "Test"
-  ip: "192.168.0.50"
-  ip_local: "192.168.0.50"
+  ip: "192.168.0.x"
+  ip_local: "192.168.0.x"
   hostname: "Test"
+
+# Change root password
+new_root_passwd: Abc#12345
